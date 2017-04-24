@@ -86,8 +86,8 @@ public class Program3 {
 		public int recSelectSchedule(boolean[] schedule, int[] cost, int dayIndex, boolean location, SchedulingProblem s){
 				//If bottom of table, fill with starting position value
 				if(dayIndex == 0){
-								cost[0] = location ? schedulingProblem.mauiCosts[0] : schedulingProblem.oahuCosts[0];
-								schedule[0] = location ? 1 : 0;
+								cost[0] = location ? s.mauiCosts[0] : s.oahuCosts[0];
+								schedule[0] = location ? true : false;
 								return cost[0];
 				}
 				int stayCost;
@@ -101,11 +101,11 @@ public class Program3 {
 				else{
 								int lcost = recSelectSchedule(schedule, cost, dayIndex - 1, location, s);
 								stayCost = s.oahuCosts[dayIndex] + lcost;
-								changeCost = s.mauiCosts[dayIndex] + s.tranferCost + lcost;
+								changeCost = s.mauiCosts[dayIndex] + s.transferCost + lcost;
 				}
 				//Add schedule and cost to table depending on cheapest option
 				schedule[dayIndex] = stayCost < changeCost ? schedule[dayIndex - 1] : !schedule[dayIndex - 1];
 				cost[dayIndex] = stayCost < changeCost ? cost[dayIndex - 1] + stayCost : cost[dayIndex - 1] + changeCost;
 				return cost[dayIndex];
 		}
-
+}
