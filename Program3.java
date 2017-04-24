@@ -6,14 +6,14 @@ import	java.util.Set;
 public class Program3 {
 
     public ActivityResult selectActivity(ActivityProblem activityProblem){
-				ActivityResult activities = new ActivityResult();
+				//ActivityResult activities = new ActivityResult();
 				int remainingRisk = activityProblem.riskBudget;
 				int[] funTable = new int[activityProblem.activities.length];
 				HashSet<String> actTable = new HashSet<String>();
 				initFunTable(funTable);
 				int maxFunLevel = recSelectActivity(activityProblem, activityProblem.activities.length - 1, remainingRisk, funTable, actTable);
 
-				System.out.println(maxFunLevel);
+				//System.out.println(maxFunLevel);
         return new ActivityResult(maxFunLevel, actTable);
     }
 		/** 
@@ -71,7 +71,41 @@ public class Program3 {
 		}
 
     public SchedulingResult selectScheduling(SchedulingProblem schedulingProblem){
-        return new SchedulingResult();
+				//SchedulingResult result = new SchedulingResult();
+				boolean[] schedule = new boolean[schedulingProblem.mauiCosts.length];
+				//initFunTable(schedule);
+				int[] cost = new int[schedulingProblem.mauiCosts.length];
+				int dayIndex = schedulingProblem.mauiCosts.length;
+				int mauiStart = recSelectSchedule(schedule, cost, dayIndex, true, schedulingProblem);
+				int oahuStart = recSelectSchedule(schedule, cost, dayIndex, false, schedulingProblem);
+				int bestPrice = mauiStart < oahuStart ? mauiStart : oahuStart;
+
+        return new SchedulingResult(schedule);
     }
 
-}
+		public int recSelectSchedule(boolean[] schedule, int[] cost, int dayIndex, boolean location, SchedulingProblem s){
+				//If bottom of table, fill with starting position value
+				if(dayIndex == 0){
+								cost[0] = location ? schedulingProblem.mauiCosts[0] : schedulingProblem.oahuCosts[0];
+								schedule[0] = location ? 1 : 0;
+								return cost[0];
+				}
+				int stayCost;
+				int changeCost;
+				//Determine if its more expensive to stay or transfer
+				if(schedule[dayIndex - 1]){
+								int lcost = recSelectSchedule(schedule, cost, dayIndex - 1, location, s);
+								stayCost = s.mauiCosts[dayIndex] + lcost;
+								changeCost = s.oahuCosts[dayIndex] + s.transferCost + lcost;
+				}
+				else{
+								int lcost = recSelectSchedule(schedule, cost, dayIndex - 1, location, s);
+								stayCost = s.oahuCosts[dayIndex] + lcost;
+								changeCost = s.mauiCosts[dayIndex] + s.tranferCost + lcost;
+				}
+				//Add schedule and cost to table depending on cheapest option
+				schedule[dayIndex] = stayCost < changeCost ? schedule[dayIndex - 1] : !schedule[dayIndex - 1];
+				cost[dayIndex] = stayCost < changeCost ? cost[dayIndex - 1] + stayCost : cost[dayIndex - 1] + changeCost;
+				return cost[dayIndex];
+		}
+
