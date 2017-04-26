@@ -18,9 +18,9 @@ public class TestRunner {
 
         // Initialize the problem
         ActivityProblem actProblem0 = new ActivityProblem(
-                new String[] {"Skydiving", "Dance Lessons", "Snorkeling"},
-                new int[] {60,40,30},
-                new int[] {4,3,3},
+                new String[] {"Skydiving", "Dance Lessons", "Snorkeling", ""},
+                new int[] {}, //{60,40,30,80},
+                new int[] {}, //{4,3,3,6},
                 6);
 
         // Initialize the solution
@@ -47,7 +47,7 @@ public class TestRunner {
         SchedulingProblem schProblem0 = new SchedulingProblem(
                 new int[] {10,100,10},
                 new int[] {400,20,400},
-                50);
+                20);
 
         // Initialize the solution
         SchedulingResult schSolution0 = new SchedulingResult(
